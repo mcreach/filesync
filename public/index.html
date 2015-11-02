@@ -12,14 +12,16 @@
 
 <body>
 
+<div ng-controller="HistoryCtrl as history">
+
 
   <div id="wrapper">
 
     <div id="sidebar-wrapper">
-<div ng-controller="HistoryCtrl as history" class="arbo" style="color:white">
+<div  class="arbo" style="color:white">
   <ul>
     <li ng-repeat="file in history.listModifiedFiles">
-<a href ng-click="history.showFile(file.filename)">{{ file.filename }}</a>
+<a href ng-click="history.showFile(file)">{{ file.filename }}</a>
 
   </li>
 </ul>
@@ -56,7 +58,8 @@
         <div class="">
           <div class="">
             <div class="col-md-12">
-              <div class="" ng-controller="HistoryCtrl as history">
+              <div class="">
+
 
                 <div class="history">
 
@@ -66,20 +69,22 @@
                   </div><!-- /row -->
 
                   <div class="row-fluid">
-                    <div ng-repeat="edit in history.listModifiedFiles" class="animate">
-                      <div class="line well ng-cloak" id="{{edit.filename}}" style="display:none">
+                    <div >
+
+                    <div class="animate" ng-if="history.fileSelected.length != 0">
+                      <div class="line well ng-cloak" id="{{ history.fileSelected.filename}}" style="display:block">
                         <div class="row">
 
                           <div class="cell col-xs-2">
 
-                            {{ edit.timestamp | date : format : shortTime }}
+                            {{ history.fileSelected.timestamp | date : format : shortTime }}
                           </div>
-                          <p>{{edit.comments}}</p>
+                          <p>{{history.fileSelected.comments}}</p>
 
 
 
                           <div class="cell col-xs-9 filename">
-                            {{ edit.filename }}
+                            {{ history.fileSelected.filename }}
                           </div>
 
                           <div class="cell col-xs-1 options">
@@ -88,7 +93,7 @@
                           </div>
 
                           <div class="col-xs-12">
-                            <div hljs source="edit.content">
+                            <div hljs source="history.fileSelected.content">
                               <textarea></textarea>
 
                             </div>
@@ -97,7 +102,6 @@
                             <div class="comments" ng-repeat="commentaire in edit.comments">
                                     {{commentaire}}
                             </div>
-
 
                             <div class="form-group">
                               <label for="comment">Comment:</label>
@@ -113,7 +117,7 @@
 
                     </div>
                     <div class="col-xs-12 alert alert-info"
-                    ng-if="history.edits.length === 0"
+                    ng-if="history.fileSelected.length === 0"
                     class="animate">
                     ... aucun historique... mais que fait le prof !
                   </div>
@@ -138,7 +142,7 @@
   </div>
 </div>
 
-
+</div>
 
 
 

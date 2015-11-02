@@ -8,8 +8,9 @@ angular.module('FileSync').controller('HistoryCtrl', ['$scope','HistoryService',
     this.listModifiedFiles = HistoryService.listModifiedFiles;
     this.fileSelected;
 
-    this.showFile=function(filename){
-      this.fileSelected=filename;
+    this.showFile=function(file){
+      console.log("i am here");
+      this.fileSelected = file;
     }
     this.remove = function (edit) {
       HistoryService.remove(edit);
@@ -20,7 +21,7 @@ angular.module('FileSync').controller('HistoryCtrl', ['$scope','HistoryService',
     }
     function onComment(edits){
       this.edits = [];
-      $scope.$apply();//
+      $scope.$apply();
     }
 
   SocketIOService.onComment(onComment.bind(this));
