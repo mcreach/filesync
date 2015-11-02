@@ -21,7 +21,7 @@
 <div  class="arbo" style="color:white">
   <ul>
     <li ng-repeat="file in history.listModifiedFiles">
-<a href ng-click="history.showFile(file)">{{ file.filename }}</a>
+<p ng-click="history.showFile(file)">{{ file.filename }}</p>
 
   </li>
 </ul>
@@ -32,7 +32,7 @@
           <div class="message" ng-repeat="msg in sc.listMessages track by $index">
             {{msg.nickname}} : </br>
             <div style="position:relative">
-              <div class="messageContentBackground" style="background-color:{{msg.userColor}};">
+              <div class="messageContentBackground">
 
               </div>
               <div ng-repeat="userMsg in msg.message">
@@ -71,8 +71,9 @@
                   <div class="row-fluid">
                     <div >
 
-                    <div class="animate" ng-if="history.fileSelected.length != 0">
-                      <div class="line well ng-cloak" id="{{ history.fileSelected.filename}}" style="display:block">
+                    <div class="animate" ng-if="history.listModifiedFiles.length !== 0">
+
+                      <div class="line well ng-cloak" id="{{history.fileSelected.filename}}" style="display:block">
                         <div class="row">
 
                           <div class="cell col-xs-2">
@@ -82,7 +83,7 @@
                           <p>{{history.fileSelected.comments}}</p>
 
 
-
+  
                           <div class="cell col-xs-9 filename">
                             {{ history.fileSelected.filename }}
                           </div>
