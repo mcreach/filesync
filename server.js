@@ -26,6 +26,7 @@ sio.set('authorization', function(handshakeData, accept) {
   // @todo use something else than a private `query`
   handshakeData.isAdmin = handshakeData._query.access_token === config.auth.token;
   accept(null, true);
+
 });
 
 function Viewers(sio) {
@@ -51,23 +52,77 @@ function Viewers(sio) {
   };
 }
 
+function Message(sio){
+  var messages = [];
+  function notifyChanges(){
+    sio.emit('messages:updated', messages);
+  }
+  return {
+    add: function add(msgObject){
+
+        if((messages.length)&&(messages[messages.length-1].id==msgObject.id)){
+        //  messages[messages.length-1].message += "\n" + msgObject.message;
+        messages[messages.length-1].message.push(msgObject.message[0]);
+        }else{
+          messages.push(msgObject);
+        }
+
+      notifyChanges();
+    }
+  };
+}
+
+
+function Comment(sio){
+  var comments = [];
+  function notifyChanges(){
+    sio.emit('comments:updated', comments);
+  }
+  return {
+    add: function add(commentObject){
+    comments.push(commentObject);
+      notifyChanges();
+    }
+  };
+}
+
 var viewers = Viewers(sio);
+var messages = Message(sio);
+var comments = Comment(sio);
 
 
 // @todo extract in its own
 sio.on('connection', function(socket) {
 
+
   // console.log('nouvelle connexion', socket.id);
   socket.on('viewer:new', function(nickname) {
     socket.nickname = nickname;
+    socket.userId = Math.random().toString(16).slice(2,14);
     viewers.add(nickname);
     console.log('new viewer with nickname %s', nickname, viewers);
   });
+
+  socket.on('viewer:newColor', function(color){
+    socket.userColor = color;
+    console.log('new color has been set');
+  })
+
+  socket.on('comment:newComment', function(comment){
+      console.log('server : new Comment');
+      comment.nickname = sio.nickname;
+      comment.date =Date.now();
+    comments.add(comment);
+  })
 
   socket.on('disconnect', function() {
     viewers.remove(socket.nickname);
     console.log('viewer disconnected %s\nremaining:', socket.nickname, viewers);
   });
+
+  socket.on('newMessage',function(message){
+    messages.add({id:socket.userId ,nickname:socket.nickname, message:[message], userColor:socket.userColor});
+  })
 
   socket.on('file:changed', function() {
     if (!socket.conn.request.isAdmin) {

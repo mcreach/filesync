@@ -9,13 +9,14 @@ angular.module('FileSync')
       console.log('connected');
       var login = prompt('Nickname?');
       socket.emit('viewer:new', login);
+      socket.emit('viewer:newColor', "#" + Math.random().toString(16).slice(2, 8));
     });
 
 
 
-    socket.on('file:changed', function(filename, timestamp, content) {
+    socket.on('file:changed', function(filename, timestamp, content, comments) {
       $timeout(function() {
-        _onFileChanged(filename, timestamp, content);
+        _onFileChanged(filename, timestamp, content, comments);
       });
     });
 
@@ -25,12 +26,31 @@ angular.module('FileSync')
       });
     });
 
+
+
     socket.on('error:auth', function(err) {
       // @todo yeurk
       alert(err);
     });
 
     return {
+
+      sendComment: function(edit, newComment){
+        console.log("socketIoService sendComment");
+        socket.emit('comment:newComment', {edit, newComment});
+      },
+      sendMessage : function(message){
+        socket.emit('newMessage', message);
+      },
+
+      onComment: function(f){
+        socket.on('comments:updated', f);
+      },
+
+      onMessage: function(f){
+        socket.on('messages:updated', f);
+      },
+
       onViewersUpdated: function(f) {
         socket.on('viewers:updated', f);
       },

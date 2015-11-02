@@ -42,7 +42,8 @@ gaze(directory, function(err, watcher) {
     sio.emit('file:changed',
       path.basename(filepath),
       Date.now(),
-      fs.readFileSync(filepath, 'utf-8') // @todo use async mode
+      fs.readFileSync(filepath, 'utf-8'),
+      ["mon premier commentaire"]
     );
   });
 
