@@ -180,6 +180,7 @@ cursor: pointer;
 
 
 #wrapper {
+  margin-top: 50px;
   padding-left: 250px;
   transition: all 0.4s ease 0s;
 }
@@ -191,7 +192,8 @@ cursor: pointer;
   width: 250px;
   background: #000;
   position: fixed;
-  height: 100%;
+  top:50px;
+  bottom: 0px;
   z-index: 1000;
   box-shadow: 0px 0px 5px #0054FF;
   transition: all 0.4s ease 0s;
@@ -216,6 +218,31 @@ cursor: pointer;
   padding: 0;
 }
 
+.users-bar{
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  height: 50px;
+  width: 100%;
+  z-index: 1050;
+  border-bottom: 2px solid #aaa;
+  margin-bottom: 10px;
+  padding: 5px;
+  text-align: right;
+  background-color: #333;
+}
+
+.user{
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  border-radius: 15px;
+  padding: 3px 10px;
+  margin: 5px;
+  line-height: 23px;
+  color: #fff;
+}
+
 @media (max-width:767px) {
 
     #wrapper {
@@ -236,5 +263,4 @@ cursor: pointer;
       width: 250px;
       transition: all 0.4s ease 0s;
     }
-
 }

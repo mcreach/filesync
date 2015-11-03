@@ -7,9 +7,9 @@ angular.module('FileSync')
 
     socket.on('connect', function() {
       console.log('connected');
-      var login = prompt('Nickname?');
-      socket.emit('viewer:new', login);
-      socket.emit('viewer:newColor', "#" + Math.random().toString(16).slice(2, 8));
+      var nickname = prompt('Nickname?');
+      var color = "#" + Math.random().toString(16).slice(2, 8);
+      socket.emit('viewer:new', {'nickname':nickname, 'color':color});
     });
 
 

@@ -11,8 +11,13 @@
 </head>
 
 <body>
+  <div ng-controller="SocialCtrl as social" class="users-bar">
+      <div style="background-color: {{viewer.color}}"class="user" ng-repeat="viewer in social.viewers" title="{{viewer.nickname}}"class="animate">
+        {{viewer.nickname | limitTo:1}}
+      </div>
+  </div>
 
-<div ng-controller="HistoryCtrl as history">
+  <div ng-controller="HistoryCtrl as history">
 
 
   <div id="wrapper">
@@ -30,13 +35,13 @@
         <div class="messageContainer">
 
           <div class="message" ng-repeat="msg in sc.listMessages track by $index">
-            {{msg.nickname}} : </br>
+            {{msg.viewer.nickname}} : </br>
             <div style="position:relative">
               <div class="messageContentBackground">
 
               </div>
               <div ng-repeat="userMsg in msg.message">
-                <div class="userColor" style="background-color: {{ msg.userColor}};"></div>{{userMsg}}</br>
+                <div class="userColor" style="background-color: {{ msg.viewer.color}};"></div>{{userMsg}}</br>
               </div>
             </div>
 
@@ -83,7 +88,7 @@
                           <p>{{history.fileSelected.comments}}</p>
 
 
-  
+
                           <div class="cell col-xs-9 filename">
                             {{ history.fileSelected.filename }}
                           </div>

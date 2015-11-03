@@ -58,6 +58,9 @@ function Message(sio){
     sio.emit('messages:updated', messages);
   }
   return {
+    update: function update(){
+        notifyChanges();
+    },
     add: function add(msgObject){
 
         if((messages.length)&&(messages[messages.length-1].id==msgObject.id)){
@@ -95,18 +98,14 @@ var comments = Comment(sio);
 sio.on('connection', function(socket) {
 
 
+  messages.update();
   // console.log('nouvelle connexion', socket.id);
-  socket.on('viewer:new', function(nickname) {
-    socket.nickname = nickname;
+  socket.on('viewer:new', function(viewer) {
+    socket.viewer = viewer;
     socket.userId = Math.random().toString(16).slice(2,14);
-    viewers.add(nickname);
-    console.log('new viewer with nickname %s', nickname, viewers);
+    viewers.add(viewer);
+    console.log('new viewer with nickname %s', viewer.nickname, viewers);
   });
-
-  socket.on('viewer:newColor', function(color){
-    socket.userColor = color;
-    console.log('new color has been set');
-  })
 
   socket.on('comment:newComment', function(comment){
       console.log('server : new Comment');
@@ -116,12 +115,12 @@ sio.on('connection', function(socket) {
   })
 
   socket.on('disconnect', function() {
-    viewers.remove(socket.nickname);
-    console.log('viewer disconnected %s\nremaining:', socket.nickname, viewers);
+    viewers.remove(socket.viewer);
+    console.log('viewer disconnected %s\nremaining:', socket.viewer.nickname, viewers);
   });
 
   socket.on('newMessage',function(message){
-    messages.add({id:socket.userId ,nickname:socket.nickname, message:[message], userColor:socket.userColor});
+    messages.add({id:socket.userId ,viewer:socket.viewer, message:[message]});
   })
 
   socket.on('file:changed', function() {
