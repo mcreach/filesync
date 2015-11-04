@@ -35,20 +35,19 @@ angular.module('FileSync')
 
     return {
 
-      sendComment: function(edit, newComment){
-        console.log("socketIoService sendComment");
-        socket.emit('comment:newComment', {edit, newComment});
+      sendComment : function(newComment){
+        console.log('socketIoService sendComment');
+        socket.emit('comment:new', newComment);
       },
       sendMessage : function(message){
         socket.emit('newMessage', message);
       },
 
-      onComment: function(f){
-        socket.on('comments:updated', f);
-      },
-
       onMessage: function(f){
         socket.on('messages:updated', f);
+      },
+      onComment: function(f){
+        socket.on('comments:updated', f);
       },
 
       onViewersUpdated: function(f) {

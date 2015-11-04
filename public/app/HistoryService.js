@@ -1,31 +1,41 @@
 'use strict';
 angular.module('FileSync')
   .factory('HistoryService', function (SocketIOService, _) {
-    var edits = [];
+
     var listModifiedFiles = {};
 
     SocketIOService.onFileChanged(function (filename, timestamp, content, comments) {
 
-      listModifiedFiles[filename] = {"filename":filename,"content": content};
+      if(listModifiedFiles[filename] == undefined){
+        listModifiedFiles[filename] = {"filename":filename,"edits": []};
+      }
 
-
-      edits.unshift({
-        filename: filename,
+      listModifiedFiles[filename].edits.unshift({
         timestamp: timestamp,
         content: content,
-        comments:comments
+        comments: []
       });
+
+      console.log(listModifiedFiles[filename]);
     });
 
     return {
-      edits: edits,
-      listModifiedFiles: listModifiedFiles,
+      /*edits: edits,
+
       remove: function (edit) {
         _.remove(edits, edit);
+      },*/
+
+      listModifiedFiles: listModifiedFiles,
+      sendComment: function(newComment){
+        console.log("HistoryService sendComment");
+        SocketIOService.sendComment(newComment);
       },
-      addComment: function(edit,newComment){
-        edit.comments.push(newComment);
-        SocketIOService.sendComment(edits);
+      addComment: function(filename, comment){
+        console.log("HistoryService addComment");
+
+        listModifiedFiles[filename].edits[0].comments.push(comment);
+        console.log(listModifiedFiles[filename]);
       }
     };
   });

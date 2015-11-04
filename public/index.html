@@ -26,9 +26,8 @@
 <div  class="arbo" style="color:white">
   <ul>
     <li ng-repeat="file in history.listModifiedFiles">
-<p ng-click="history.showFile(file)">{{ file.filename }}</p>
-
-  </li>
+        <p ng-click="history.showFile(file)">{{ file.filename }}</p>
+    </li>
 </ul>
 </div>
       <div class="chatContainer" ng-controller="SocialCtrl as sc">
@@ -78,16 +77,16 @@
 
                     <div class="animate" ng-if="history.listModifiedFiles.length !== 0">
 
-                      <div class="line well ng-cloak" id="{{history.fileSelected.filename}}" style="display:block">
+                      <div ng-repeat="edit in history.fileSelected.edits" class="line well ng-cloak" id="{{history.fileSelected.filename}}" style="display:block">
                         <div class="row">
 
                           <div class="cell col-xs-2">
 
-                            {{ history.fileSelected.timestamp | date : format : shortTime }}
+                            {{edit.timestamp | date : format : shortTime }}
                           </div>
-                          <p>{{history.fileSelected.comments}}</p>
-
-
+                          <p ng-repeat="comment in history.fileSelected.edit.comments">
+                            {{comment}}
+                          </p>
 
                           <div class="cell col-xs-9 filename">
                             {{ history.fileSelected.filename }}
@@ -95,25 +94,21 @@
 
                           <div class="cell col-xs-1 options">
                             <a href ng-click="history.remove(edit)" class="btn btn-danger" title="">x</a>
-
                           </div>
 
                           <div class="col-xs-12">
-                            <div hljs source="history.fileSelected.content">
+                            <div hljs source="edit.content">
                               <textarea></textarea>
-
                             </div>
 
-
-                            <div class="comments" ng-repeat="commentaire in edit.comments">
-                                    {{commentaire}}
+                            <div class="comments" ng-repeat="comment in edit.comments">
+                                    {{comment.nickname}} - {{comment.comment}}
                             </div>
 
                             <div class="form-group">
                               <label for="comment">Comment:</label>
                               <textarea class="form-control" rows="5" ng-model="history.newComment" id="comment"></textarea>
-                                <button ng-click="history.addComment(edit)" type="button"  class="btn btn-default">Add</button>
-
+                                <button ng-click="history.sendComment()" type="button"  class="btn btn-default">Add</button>
                             </div>
                           </div>
 
@@ -123,9 +118,9 @@
 
                     </div>
                     <div class="col-xs-12 alert alert-info"
-                    ng-if="history.fileSelected.length === 0"
+                    ng-if="history.fileSelected == undefined"
                     class="animate">
-                    ... aucun historique... mais que fait le prof !
+                    ... aucun historique.. mais que fait le prof !
                   </div>
 
                 </div>

@@ -42,8 +42,7 @@ gaze(directory, function(err, watcher) {
     sio.emit('file:changed',
       path.basename(filepath),
       Date.now(),
-      fs.readFileSync(filepath, 'utf-8'),
-      ["mon premier commentaire"]
+      fs.readFileSync(filepath, 'utf-8')
     );
   });
 

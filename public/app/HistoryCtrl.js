@@ -1,7 +1,6 @@
 'use strict';
 angular.module('FileSync').controller('HistoryCtrl', ['$scope','HistoryService', 'SocketIOService', 'VisibilityService',
   function ($scope, HistoryService,SocketIOService,VisibilityService) {
-    this.edits = HistoryService.edits;
 
     this.visibility = VisibilityService;
     this.newComment;
@@ -9,22 +8,24 @@ angular.module('FileSync').controller('HistoryCtrl', ['$scope','HistoryService',
     this.fileSelected;
 
     this.showFile=function(file){
-      console.log("i am here");
       this.fileSelected = file;
     }
-    this.remove = function (edit) {
-      HistoryService.remove(edit);
+
+    this.remove = function (file) {
+      HistoryService.remove(file);
     };
-    this.addComment = function(edit){
-      HistoryService.addComment(edit, this.newComment);
-      this.newComment="";
-    }
-    function onComment(edits){
-      this.edits = [];
-      $scope.$apply();
+
+    this.sendComment = function(){
+      HistoryService.sendComment(this.newComment);
     }
 
-  SocketIOService.onComment(onComment.bind(this));
+    function onComment(comment){
+        HistoryService.addComment(this.fileSelected.filename, comment);
+        this.newComment="";
+        $scope.$apply();
+    }
+
+    SocketIOService.onComment(onComment.bind(this));
 
 
 

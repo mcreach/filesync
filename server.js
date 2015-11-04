@@ -62,7 +62,6 @@ function Message(sio){
         notifyChanges();
     },
     add: function add(msgObject){
-
         if((messages.length)&&(messages[messages.length-1].id==msgObject.id)){
         //  messages[messages.length-1].message += "\n" + msgObject.message;
         messages[messages.length-1].message.push(msgObject.message[0]);
@@ -107,12 +106,15 @@ sio.on('connection', function(socket) {
     console.log('new viewer with nickname %s', viewer.nickname, viewers);
   });
 
-  socket.on('comment:newComment', function(comment){
-      console.log('server : new Comment');
-      comment.nickname = sio.nickname;
-      comment.date =Date.now();
-    comments.add(comment);
-  })
+  socket.on('comment:new', function(newComment){
+      console.log("server : new Comment");
+      var comment = {};
+      comment.nickname = socket.viewer.nickname;
+      comment.comment = newComment
+      console.log(comment);
+      sio.emit('comments:updated', comment);
+
+  });
 
   socket.on('disconnect', function() {
     viewers.remove(socket.viewer);
@@ -121,7 +123,7 @@ sio.on('connection', function(socket) {
 
   socket.on('newMessage',function(message){
     messages.add({id:socket.userId ,viewer:socket.viewer, message:[message]});
-  })
+  });
 
   socket.on('file:changed', function() {
     if (!socket.conn.request.isAdmin) {
